@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 // mongodb url
 const url = `mongodb://${config.db.db_user}:${config.db.db_password}@${config.db.db_host}:${config.db.db_port}`;
 // mongodb database name
-const dbName = "my-message-board";
+const dbName = config.db.db_name;
 
 // connect to mongodb
 mongoose.connect(`${url}/${dbName}`, { useNewUrlParser: true, useUnifiedTopology: true });
