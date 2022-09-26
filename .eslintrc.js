@@ -4,7 +4,10 @@ module.exports = {
     commonjs: true,
     es2021: true
   },
-  extends: 'standard-with-typescript',
+  extends: ['standard-with-typescript',
+    'prettier',
+    'plugin:prettier/recommended'
+  ],
   overrides: [
   ],
   parserOptions: {

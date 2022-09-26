@@ -1,3 +1,4 @@
+const path = require("path");
 const Koa = require("koa");
 const app = new Koa();
 const views = require("koa-views");
@@ -16,10 +17,12 @@ const comments = require("./routes/comments");
 onerror(app);
 
 // 服务端支持跨域
-app.use(cors({
-    origin: 'http://localhost:8080',  // 允许跨域的域名
-    credentials: true,  // 允许跨域携带cookie
-}));
+app.use(
+    cors({
+        origin: "http://localhost:8080", // 允许跨域的域名
+        credentials: true // 允许跨域携带cookie
+    })
+);
 
 // middlewares
 app.use(
@@ -29,10 +32,10 @@ app.use(
 );
 app.use(json());
 app.use(logger());
-app.use(require("koa-static")(__dirname + "/public"));
+app.use(require("koa-static")(path.join(__dirname, "/public")));
 
 app.use(
-    views(__dirname + "/views", {
+    views(path.join(__dirname, "/views"), {
         extension: "pug"
     })
 );

@@ -1,5 +1,5 @@
 const router = require("koa-router")();
-const {login, register} = require("../controller/user");
+const { login, register } = require("../controller/user");
 const loginCheck = require("../middleware/loginCheck");
 
 router.prefix("/users");

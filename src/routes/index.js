@@ -26,7 +26,7 @@ router.get("/session-test", async (ctx, netx) => {
     ctx.body = {
         title: "session-test",
         viewcount: ctx.session.viewcount
-    }
+    };
 });
 
 module.exports = router;
