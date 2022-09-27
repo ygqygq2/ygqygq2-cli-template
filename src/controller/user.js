@@ -4,7 +4,7 @@
  * @LastEditTime: 2022-09-08 15:14:56
  * @LastEditors : Chinge Yang
  * @Description : user contoller
- * @FilePath    : /my-message-board/src/controller/user.js
+ * @FilePath    : /ygqygq2-cli-template/src/controller/user.js
  */
 
 const User = require("../model/User");
@@ -12,7 +12,7 @@ const User = require("../model/User");
 // 登录
 async function login(username, password) {
     // 查询用户是否存在
-    const user = await User.findOne({ username });
+    const user = await User.findOne({username});
     if (!user) {
         // 用户不存在
         throw new Error("用户不存在");
@@ -34,4 +34,4 @@ async function register(userInfo = {}) {
     return newUser;
 }
 
-module.exports = { login, register };
+module.exports = {login, register};
