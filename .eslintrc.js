@@ -4,15 +4,21 @@ module.exports = {
     commonjs: true,
     es2021: true
   },
-  extends: ['standard-with-typescript',
-    'prettier',
-    'plugin:prettier/recommended'
-  ],
-  overrides: [
-  ],
+  plugins: ["@typescript-eslint/eslint-plugin", "eslint-plugin-tsdoc"],
+  extends: ["plugin:@typescript-eslint/recommended"],
+  overrides: [],
   parserOptions: {
-    ecmaVersion: 'latest'
+    ecmaVersion: "latest",
   },
   rules: {
-  }
-}
+    curly: ["error", "all"],
+    semi: ["warn", "always"],
+    "@typescript-eslint/semi": ["warn", "always"],
+    quotes: "off",
+    "@typescript-eslint/quotes": ["warn", "double"],
+    "tsdoc/syntax": "warn",
+    // Note: you must disable the base rule as it can report incorrect errors
+    "comma-dangle": "off",
+    "@typescript-eslint/comma-dangle": ["off", "only-multiline"],
+  },
+};
