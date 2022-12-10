@@ -1,5 +1,5 @@
 // config
-const dotenv = require("dotenv");
+import * as dotenv from "dotenv";
 const NODE_ENV = process.env.NODE_ENV || "dev";
 dotenv.config({path: `.env.${NODE_ENV}`}); //config()中是配置.env文件的位置，如果在根目录，此处括号中可以留空
 
@@ -16,4 +16,4 @@ const config = {
     }
 }
 
-module.exports = config
+export default config
