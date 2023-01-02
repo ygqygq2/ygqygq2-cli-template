@@ -1,6 +1,6 @@
 module.exports = {
   cache: {
-    type: "filesystem",
+    type: 'filesystem',
     allowCollectingMemory: true,
   },
 };
