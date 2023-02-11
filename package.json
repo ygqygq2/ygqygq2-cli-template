@@ -27,7 +27,7 @@
     "dev:qq": "npm run build:qq -- --watch",
     "dev:jd": "npm run build:jd -- --watch",
     "dev:quickapp": "npm run build:quickapp -- --watch",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx,.vue src",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
     "lint:fix": "eslint src test --fix",
     "lint-staged": "lint-staged --allow-empty",
     "lint-staged:js": "eslint --ext .js,.jsx,.ts,.tsx ",
@@ -95,5 +95,10 @@
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged",
     "preserveUnused": true
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
   }
 }
