@@ -123,24 +123,8 @@ module.exports = {
     '@typescript-eslint/no-unsafe-argument': 0,
     '@typescript-eslint/ban-ts-comment': 0,
     /*  ********************************** 其它 ********************************** */
-    'zhlint/zhlint': [
-      'warn',
-      {
-        lintComments: true,
-        lintStringLiterals: true,
-        zhlint: {
-          rules: {
-            halfWidthPunctuation: '',
-            fullWidthPunctuation: '',
-            unifiedPunctuation: 'simplified',
-            spaceBetweenHalfWidthLetters: false,
-            spaceAfterHalfWidthPunctuation: false,
-          },
-        },
-      },
-    ],
   },
   settings: {
-    extensions: ['. ts', '. d.ts', '. cts', '. mts', '. js', '. cjs', 'mjs', '. json'],
+    extensions: ['.ts', '.d.ts', '.cts', '.mts', '.js', '.cjs', '.mjs', '.json'],
   },
 };
