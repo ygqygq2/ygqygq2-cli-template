@@ -69,7 +69,7 @@ module.exports = {
     'import/no-extraneous-dependencies': [
       1,
       {
-        devDependencies: ['**/*. test. {ts,js}', '**/*. spec. {ts,js}', './test/**.{ts,js}'],
+        devDependencies: ['**/*.test.{ts,js}', '**/*.spec.{ts,js}', './test/**.{ts,js}'],
       },
     ],
     // 模块导入顺序规则
@@ -143,6 +143,6 @@ module.exports = {
     ],
   },
   settings: {
-    extensions: ['. ts', '. d.ts', '. cts', '. mts', '. js', '. cjs', 'mjs', '. json'],
+    extensions: ['.ts', '.d.ts', '.cts', '.mts', '.js', '.cjs', '.mjs', '.json'],
   },
 };
