@@ -16,10 +16,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AuthGuard } from '@nestjs/passport';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { TypeormFilter } from '@/filters/typeorm.filter';
+
+import { AdminGuard } from '@/guards';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserDto } from './dto/get-user.dto';
@@ -48,16 +49,15 @@ export class UserController {
    * @returns
    */
   @Get()
+  @UseGuards(AdminGuard)
   getUsers(@Query() query: GetUserDto): any {
     return this.userService.findAll(query);
-    // return this.userService.getUsers();
   }
 
   @Post()
   addUser(@Body(CreateUserPipe) dto: CreateUserDto): any {
     const user = dto as User;
     return this.userService.create(user);
-    // return this.userService.addUser();
   }
 
   @Patch('/:id')
@@ -79,14 +79,25 @@ export class UserController {
 
   // 不超过 3 个参数，建议直接使用类型管道
   @Get('/profile')
-  @UseGuards(AuthGuard('jwt'))
-  getUserProfile(
+  async getUserProfile(
     @Query('id', ParseIntPipe) id: any,
     // 这里 req 中的 user 是通过 AuthGuard('jwt') 中的 validate 方法返回的 PassportModule 来添加的
     // @Req() req
-  ): any {
-    // console.log('🚀 ~ file: user.controller.ts:84~ UserController~ getUserProfile~ Req', req.user);
-    return this.userService.findProfile(id);
+  ): Promise<any> {
+    const result = await this.userService.findProfile(id);
+    let data = {};
+    if (result.id) {
+      data = {
+        errno: 0,
+        data: result,
+      };
+    } else {
+      data = {
+        errno: 100,
+        message: '用户不存在',
+      };
+    }
+    return data;
   }
 
   @Get('/logs')
@@ -104,7 +115,7 @@ export class UserController {
   }
 
   // @Get()
-  // getUser(@Param() '/:id'): any{
+  // getUser(@Param() '/:id'): any {
   //   return ""
   // }
 }

@@ -3,17 +3,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { conditionUtils } from 'src/utils/db.helper';
 import { In, Repository } from 'typeorm';
 
+import { Role } from '@/enum/roles.enum';
 import { Logs } from '@/logs/logs.entity';
 
 import { Roles } from '@/roles/roles.entity';
 
 import { GetUserDto } from './dto/get-user.dto';
+import { Profile } from './profile.entity';
 import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>,
     @InjectRepository(Logs) private readonly logsRepository: Repository<Logs>,
     @InjectRepository(Roles)
     private readonly rolesRepository: Repository<Roles>,
@@ -23,32 +26,6 @@ export class UserService {
     const { limit, page, username, role, gender } = query;
     const take = limit || 10;
     const skip = ((page || 1) - 1) * take;
-    // SELECT* from user u, profile p, role r WHERE u.id= p.uid AND u.id= r.uid AND...
-    // SELECT* FROM user u LEFT JOIN profile p ON u.id= p.uid LEFT JOIN role r ON u.id= r.uid WHERE...
-    // return this.userRepository.find({
-    //   select: {
-    //     id: true,
-    //     username: true,
-    //     profile: {
-    //       gender: true,
-    //     },
-    //   },
-    //   relations: {
-    //     profile: true,
-    //     roles: true,
-    //   },
-    //   where: {
-    //     username,
-    //     profile: {
-    //       gender,
-    //     },
-    //     roles: {
-    //       id: role,
-    //     },
-    //   },
-    //   take,
-    //   skip,
-    // });
     const obj = {
       'user.username': username,
       'profile.gender': gender,
@@ -64,14 +41,18 @@ export class UserService {
   }
 
   find(username: string) {
-    return this.userRepository.findOne({ where: { username } });
+    return this.userRepository.findOne({ where: { username }, relations: ['roles', 'roles.menus'] });
   }
 
-  findOne(id: number) {
-    return this.userRepository.findOne({ where: { id } });
+  async findOne(id: number): Promise<User> {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'roles')
+      .where('user.id = :id', { id })
+      .getOne();
   }
 
-  async create(user: Partial<User>) {
+  async create(user: Partial<User>, profile?: Partial<Profile>) {
     if (!user.roles) {
       const role = await this.rolesRepository.findOne({ where: { id: 2 } });
       user.roles = [role];
@@ -86,6 +67,11 @@ export class UserService {
     }
     const userTmp = this.userRepository.create(user);
     const res = await this.userRepository.save(userTmp);
+    const profileTmp = this.profileRepository.create({
+      nickname: profile.nickname,
+      user: res,
+    });
+    await this.profileRepository.save(profileTmp);
     return res;
   }
 
@@ -125,8 +111,6 @@ export class UserService {
   }
 
   findLogsByGroup(id: number) {
-    // SELECT logs.result as result, COUNT(logs.result) AS count FROM logs, user WHERE logs.user_id= logs.userId AND user.id= 2 GROUP BY logs.result;
-    // return this.logsRepository.query("select* from logs")
     return this.logsRepository
       .createQueryBuilder('logs')
       .select('logs.result', 'result')
@@ -139,5 +123,11 @@ export class UserService {
       .offset(2)
       .limit(3)
       .getRawMany();
+  }
+
+  async isAdmin(id: number) {
+    const user = await this.findOne(id);
+    const roles = user.getRolesList();
+    return roles.includes(Role.Admin);
   }
 }

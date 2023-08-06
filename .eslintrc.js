@@ -131,9 +131,21 @@ module.exports = {
         lintComments: true,
         lintStringLiterals: true,
         zhlint: {
-          rules: ['space-full-width-content', 'space-punctuation'],
+          rules: {
+            halfWidthPunctuation: '',
+            fullWidthPunctuation: '',
+            noSpaceBeforePunctuation: undefined,
+            spaceAfterHalfWidthPunctuation: undefined,
+            spaceOutsideHalfBracket: undefined,
+            spaceBetweenMixedWidthLetters: true
+          },
         },
+
       },
+    ],
+    'jest/expect-expect': [
+      'error',
+      { assertFunctionNames: ['expect', 'request.*.expect', 'spec.*', '*.step*.spec', '*.cleanup*'] },
     ],
   },
   settings: {

@@ -1,16 +1,8 @@
-import {
-  AfterInsert,
-  AfterRemove,
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Logs } from '@/logs/logs.entity';
+import { Question } from '@/question/question.entity';
 import { Roles } from '@/roles/roles.entity';
 
 import { Profile } from './profile.entity';
@@ -24,7 +16,11 @@ export class User {
   username: string;
 
   @Column()
+  @Exclude()
   password: string;
+
+  @Column()
+  salt: string;
 
   @OneToMany(() => Logs, (logs) => logs.user, { cascade: true })
   logs: Logs[];
@@ -36,13 +32,11 @@ export class User {
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
   profile: Profile;
 
-  @AfterInsert()
-  afterInsert() {
-    console.log('afterInsert', this.id, this.username);
-  }
+  @OneToMany(() => Question, (question) => question.user)
+  questions: Question[];
 
-  @AfterRemove()
-  afterRemove() {
-    console.log('afterRemove', this.id, this.username);
+  // 获取用户角色列表
+  getRolesList(): number[] {
+    return this.roles.map((role) => role.id);
   }
 }

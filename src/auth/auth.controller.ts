@@ -1,5 +1,7 @@
 import { Body, ClassSerializerInterceptor, Controller, Get, Post, UseFilters, UseInterceptors } from '@nestjs/common';
 
+import { Public } from '@/decorators/auth.decorator';
+import { ErrMsg, Errno } from '@/enum/errno.enum';
 import { TypeormFilter } from '@/filters/typeorm.filter';
 
 import { AuthService } from './auth.service';
@@ -16,24 +18,48 @@ import { SigninUserDto } from './dto/signin-user.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @Get()
   getHello(): string {
     return 'Auth';
   }
 
-  @Post('/signin')
+  @Public()
+  @Post('/login')
   async signin(@Body() dto: SigninUserDto) {
     const { username, password } = dto;
-    const token = await this.authService.signin(username, password);
-    return {
-      access_token: token,
-    };
-    // return this.authService.signin(username, password);
+    try {
+      const token = await this.authService.signin(username, password);
+      // 判断是否返回正确 token
+      return {
+        errno: 0,
+        data: {
+          token,
+        },
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        errno: Errno.ERRNO_21,
+        msg: ErrMsg[Errno.ERRNO_21],
+      };
+    }
   }
 
-  @Post('/signup')
-  signup(@Body() dto: SigninUserDto) {
-    const { username, password } = dto;
-    return this.authService.signup(username, password);
+  @Public()
+  @Post('/register')
+  async signup(@Body() dto: SigninUserDto) {
+    const { username, password, nickname } = dto;
+    const data = await this.authService.signup(username, password, nickname);
+    // 判断是否注册成功
+    if (!data) {
+      return {
+        errno: Errno.ERRNO_20,
+        msg: ErrMsg[Errno.ERRNO_20],
+      };
+    }
+    return {
+      errno: 0,
+    };
   }
 }
