@@ -1,32 +1,26 @@
-import * as fs from 'fs';
-
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import * as dotenv from 'dotenv';
+import * as tsconfigPaths from 'tsconfig-paths';
 
 import { DataSource, DataSourceOptions } from 'typeorm';
 
-import { ConfigEnum } from '@/enum/config.enum';
+import { ConfigEnum } from './src/enum/config.enum';
+import { getEntitiesDir, getServerConfig } from './src/utils/config.helper';
 
-// 通过环境变量读取不同的 .env 文件
-export function getEnv(env: string): Record<string, unknown> {
-  if (fs.existsSync(env)) {
-    return dotenv.parse(fs.readFileSync(env));
-  }
-  return {};
-}
-export function getServerConfig() {
-  const defaultConfig = getEnv('.env');
-  const envConfig = getEnv(`.env.${process.env.NODE_ENV || 'development'}`);
-  const config = { ...defaultConfig, ...envConfig };
-  return config;
-}
-// 通过dotEnv 来解析不同的配置
-export function buildConnectionOptions() {
-  const defaultConfig = getEnv('.env');
-  const envConfig = getEnv(`.env.${process.env.NODE_ENV || 'development'}`);
-  const config = { ...defaultConfig, ...envConfig };
-  const entitiesDir =
-    process.env.NODE_ENV === 'test' ? [`${__dirname}/**/*.entity.ts`] : [`${__dirname}/**/*.entity{.js,.ts}`];
+// 解析 TypeScript 别名
+const baseUrl = '.';
+const paths = {
+  '@/*': ['./src/*'],
+};
+
+tsconfigPaths.register({
+  baseUrl,
+  paths,
+});
+
+// 通过 dotEnv 来解析不同的配置
+export function getConnectionParams() {
+  const config = getServerConfig();
+  const entitiesDir = getEntitiesDir();
   return {
     type: config[ConfigEnum.DB_TYPE],
     host: config[ConfigEnum.DB_HOST],
@@ -40,7 +34,7 @@ export function buildConnectionOptions() {
   } as TypeOrmModuleOptions;
 }
 
-export const connectionParams = buildConnectionOptions();
+export const connectionParams = getConnectionParams();
 
 export default new DataSource({
   ...connectionParams,
