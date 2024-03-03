@@ -1,11 +1,16 @@
 name: Publish to VSCode Store
 on:
-  release:
-    types:
-      - published
+  push:
+    tags:
+      - '*'
+  # release:
+  #   types:
+  #     - published
   workflow_dispatch:
 jobs:
   package-publish:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,7 +19,7 @@ jobs:
           node-version: '20'
       - run: npm i -g @vscode/vsce pnpm
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: cache
         with:
           path: |
@@ -36,7 +41,7 @@ jobs:
       #     files: '*.vsix'
       - run: |
           # 使用sed命令提取最新的版本记录
-          cat CHANGELOG.md | awk '/^## \[/ {if (flag) exit; flag=1} flag {print}' > body.md
+          cat CHANGELOG.md | awk '/^# \[/ {if (flag) exit; flag=1} flag {print}' > body.md
       - name: Publish release
         uses: ncipollo/release-action@v1
         with:
