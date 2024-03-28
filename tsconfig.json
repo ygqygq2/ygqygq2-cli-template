@@ -1,0 +1,5 @@
+{
+  "extends": "@ygqygq2/typescript-config/electron.json",
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"],
+  "exclude": ["node_modules", "dist", "src/out", "vite.config.ts"]
+}
