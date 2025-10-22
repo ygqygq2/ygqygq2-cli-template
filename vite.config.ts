@@ -1,5 +1,5 @@
 /// <reference types="vitest" />
-import path from 'node:path';
+import path from 'path';
 
 import { defineConfig } from 'vite';
 
@@ -19,5 +19,8 @@ export default defineConfig({
   },
   test: {
     include: ['src/test/unit/**/*.spec.ts'],
+    coverage: {
+      exclude: ['node_modules', 'out', 'src/test', 'src/typings', '.vscode-test'],
+    },
   },
 });
