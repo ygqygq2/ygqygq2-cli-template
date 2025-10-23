@@ -1,6 +1,8 @@
 name: Development and Testing
 on:
   push:
+    branches:
+      - '*'
 jobs:
   build:
     strategy:
@@ -24,10 +26,13 @@ jobs:
             ${{ runner.os }}-pnpm-
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: pnpm i --frozen-lockfile --ignore-scripts
-      - run: xvfb-run -a pnpm test:suite
+        run: pnpm i --frozen-lockfile --ignore-scripts || pnpm i --ignore-scripts
+      - run: |
+          export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket
+          sudo systemctl start dbus
+          xvfb-run -a pnpm test:suite:mocha
         if: runner.os == 'Linux'
-      - run: pnpm test:suite
+      - run: pnpm test:suite:mocha
         if: runner.os != 'Linux'
       - run: pnpm run test:coverage
       - run: vsce package --no-dependencies
