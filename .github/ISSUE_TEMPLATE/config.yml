@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📚 Documentation
+    url: https://github.com/ygqygq2/ygqygq2-cli-template/tree/vscode-extension/docs
+    about: Check the documentation for usage guides and examples
+  - name: 💬 Discussions
+    url: https://github.com/ygqygq2/ygqygq2-cli-template/discussions
+    about: Ask questions and discuss ideas with the community
