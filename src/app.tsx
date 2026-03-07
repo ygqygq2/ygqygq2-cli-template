@@ -23,8 +23,8 @@ function App() {
 
   useEffect(() => {
     if (isSent) {
-      window.Main.on("message", (message: string) => {
-        setFromMain(message);
+      window.Main.on("message", (message) => {
+        setFromMain(message as string);
       });
     }
   }, [fromMain, isSent]);
