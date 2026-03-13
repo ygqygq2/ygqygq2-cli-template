@@ -1,5 +1,10 @@
-import { Button } from '@/components/ui/button';
-
 export default function Page() {
-  return <Button>Hello, Next.js!</Button>;
+  return (
+    <main>
+      <h1>Hello World</h1>
+      <p>
+        Start editing <code>src/app/page.tsx</code>.
+      </p>
+    </main>
+  );
 }
