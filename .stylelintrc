@@ -1,9 +1,15 @@
 {
-  "extends": ["stylelint-config-standard-scss"],
-  "plugins": ["stylelint-scss"],
+  "extends": [
+    "stylelint-config-standard-scss"
+  ],
+  "plugins": [
+    "stylelint-scss"
+  ],
   "overrides": [
     {
-      "files": ["**/*.vue"],
+      "files": [
+        "**/*.vue"
+      ],
       "customSyntax": "postcss-html"
     }
   ],
@@ -16,7 +22,12 @@
     "function-no-unknown": [
       true,
       {
-        "ignoreFunctions": ["v-bind", "map-get", "lighten", "darken"]
+        "ignoreFunctions": [
+          "v-bind",
+          "map-get",
+          "lighten",
+          "darken"
+        ]
       }
     ],
     "scss/no-global-function-names": null,
